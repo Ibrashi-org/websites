@@ -53,13 +53,7 @@ function AppContent() {
   const [product, setProduct] = useState(null);
   const location = useLocation();
 
-  useEffect(() => {
-    const verified = localStorage.getItem("age_verified");
-    if (verified === "true") {
-      setIsAgeVerified(true);
-    }
-  }, []);
-
+  // Initialize cart from localStorage
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
