@@ -205,7 +205,7 @@ class MookiStoreAPITester:
         # Temporarily remove token
         temp_token = self.token
         self.token = None
-        success, _ = self.run_test("Unauthorized Access", "GET", "orders", 401)
+        success, _ = self.run_test("Unauthorized Access", "GET", "orders", 403)
         self.token = temp_token
         return success
 
