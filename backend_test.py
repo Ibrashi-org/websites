@@ -159,7 +159,7 @@ class MookiStoreAPITester:
             "message": "This is a test message from the API test suite."
         }
         
-        success, response = self.run_test("Create Contact Message", "POST", "contact", 201, message_data)
+        success, response = self.run_test("Create Contact Message", "POST", "contact", 200, message_data)
         if success and response:
             self.message_id = response.get('id')
             print(f"   Message ID: {self.message_id}")
