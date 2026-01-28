@@ -712,6 +712,9 @@ const AdminDashboard = () => {
                 {selectedOrder?.status}
               </Badge>
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              Order details and status management
+            </DialogDescription>
           </DialogHeader>
 
           {selectedOrder && (
