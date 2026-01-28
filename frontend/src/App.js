@@ -150,6 +150,9 @@ function AppContent() {
   };
 
   const isAdminRoute = location.pathname.startsWith("/admin");
+  
+  // Skip age verification for admin routes
+  const showAgeVerification = !isAgeVerified && !isAdminRoute;
 
   return (
     <AuthContext.Provider value={{ token, login, logout, isAuthenticated: !!token }}>
@@ -166,8 +169,8 @@ function AppContent() {
           fetchProduct,
         }}
       >
-        {!isAgeVerified && <AgeVerification onVerify={handleAgeVerify} />}
-        <div className={`App ${!isAgeVerified ? "blur-lg pointer-events-none" : ""}`}>
+        {showAgeVerification && <AgeVerification onVerify={handleAgeVerify} />}
+        <div className={`App ${showAgeVerification ? "blur-lg pointer-events-none" : ""}`}>
           <div className="smoke-bg" />
           <div className="noise-overlay" />
           {!isAdminRoute && <Header />}
