@@ -45,7 +45,10 @@ export const useAuth = () => {
 
 function AppContent() {
   const [cart, setCart] = useState([]);
-  const [isAgeVerified, setIsAgeVerified] = useState(false);
+  // Initialize age verified state from localStorage synchronously to avoid flash
+  const [isAgeVerified, setIsAgeVerified] = useState(() => {
+    return localStorage.getItem("age_verified") === "true";
+  });
   const [token, setToken] = useState(localStorage.getItem("admin_token") || null);
   const [product, setProduct] = useState(null);
   const location = useLocation();
