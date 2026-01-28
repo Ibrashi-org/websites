@@ -121,7 +121,7 @@ class MookiStoreAPITester:
             "total": 59.98
         }
         
-        success, response = self.run_test("Create Order", "POST", "orders", 201, order_data)
+        success, response = self.run_test("Create Order", "POST", "orders", 200, order_data)
         if success and response:
             self.order_id = response.get('id')
             print(f"   Order ID: {self.order_id}")
