@@ -1,0 +1,126 @@
+{
+  "identity": {
+    "name": "MOOKI STORE",
+    "persona": "E1: The Anti-AI Designer",
+    "tone": "Premium, Mysterious, Bold, Exclusive",
+    "archetype": "Electric & Neon / Jewel & Luxury Hybrid"
+  },
+  "typography": {
+    "headings": {
+      "font_family": "Anton, sans-serif",
+      "weights": ["400"],
+      "usage": "Main headings, Product Name, Impact text. Uppercase preferred for H1/H2.",
+      "letter_spacing": "tracking-wide"
+    },
+    "body": {
+      "font_family": "Manrope, sans-serif",
+      "weights": ["300", "400", "500", "600"],
+      "usage": "Paragraphs, UI elements, Buttons, Data.",
+      "letter_spacing": "tracking-normal"
+    },
+    "installation": "Import from Google Fonts: @import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;400;500;600&display=swap');"
+  },
+  "colors": {
+    "palette": {
+      "background": "#050505",
+      "surface": "#0A0A0A",
+      "surface_highlight": "#121212",
+      "border": "#262626",
+      "primary": "#FF4500",
+      "primary_hover": "#CC3700",
+      "secondary": "#333333",
+      "text_main": "#EDEDED",
+      "text_muted": "#A1A1AA",
+      "success": "#10B981",
+      "error": "#EF4444"
+    },
+    "usage_rules": {
+      "background": "Use #050505 for the main page background. Never use pure black #000000.",
+      "gradients": "Avoid full screen gradients. Use radial gradients for 'glow' effects behind the product.",
+      "accents": "Use #FF4500 sparingly. Only for 'Add to Cart', 'Checkout', and key prices."
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid for features. Asymmetric layouts for marketing sections.",
+    "spacing": "Generous. Use p-8 to p-24 for sections. Gap-8 for grids.",
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "z_index": {
+      "background": "-10",
+      "content": "10",
+      "overlay": "20",
+      "modal": "50",
+      "toast": "100"
+    }
+  },
+  "visual_enhancers": {
+    "textures": {
+      "smoke": "Use the smoke image with low opacity (10-20%) and mix-blend-mode: screen over the dark background.",
+      "noise": "Add a subtle SVG noise overlay fixed to the viewport for film grain effect (opacity 0.03)."
+    },
+    "effects": {
+      "glassmorphism": "backdrop-blur-xl bg-black/40 border border-white/10 for sticky headers and floating carts.",
+      "glow": "box-shadow: 0 0 40px -10px rgba(255, 69, 0, 0.3) for primary buttons."
+    },
+    "border_radius": {
+      "buttons": "rounded-full (Pill shape)",
+      "cards": "rounded-xl",
+      "inputs": "rounded-lg"
+    }
+  },
+  "media": {
+    "images": {
+      "product_hero": "https://customer-assets.emergentagent.com/job_mooki-single-vape/artifacts/534ct6rv_shisha.jpg",
+      "logo": "https://customer-assets.emergentagent.com/job_mooki-single-vape/artifacts/yq4n0bz1_logo.jpg",
+      "background_texture": "https://images.unsplash.com/photo-1615403849259-20dc98b26d5f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHw0fHxibGFjayUyMHNtb2tlJTIwdGV4dHVyZSUyMGFic3RyYWN0fGVufDB8fHx8MTc2OTYyNzUzN3ww&ixlib=rb-4.1.0&q=85",
+      "accent_texture": "https://images.unsplash.com/photo-1764347295958-6a729b1fdf7e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHxuZW9uJTIwb3JhbmdlJTIwbGlnaHQlMjBhYnN0cmFjdCUyMGRhcmslMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc2OTYyNzUzOXww&ixlib=rb-4.1.0&q=85"
+    },
+    "icons": "Lucide React (default). Use thin strokes (1.5px) for elegance."
+  },
+  "components": {
+    "HeroSection": {
+      "description": "Full screen height. Product image centered. 'STRAWBERRY PUNCH' text behind the product in huge Anton font (parallax effect). Smoke texture overlay.",
+      "path": "/app/frontend/src/components/HeroSection.js"
+    },
+    "ProductDetails": {
+      "description": "Bento grid layout showing Flavor, Nicotine, Price. 'Add to Cart' sticky bar on mobile.",
+      "path": "/app/frontend/src/components/ProductDetails.js"
+    },
+    "CartDrawer": {
+      "description": "Slide-out sheet from right. Glassmorphism background. Large product thumbnail.",
+      "path": "/app/frontend/src/components/CartDrawer.js"
+    },
+    "CheckoutForm": {
+      "description": "Minimalist, step-by-step or single page. High contrast inputs. Orange 'Place Order' button.",
+      "path": "/app/frontend/src/components/CheckoutForm.js"
+    },
+    "AdminDashboard": {
+      "description": "Clean table layout for orders. Status badges (Pending=Yellow, Confirmed=Blue, Completed=Green). Product toggle switch.",
+      "path": "/app/frontend/src/pages/AdminDashboard.js"
+    },
+    "AgeVerification": {
+      "description": "Modal on load. 18+ check. Simple 'Yes/No'. No escape.",
+      "path": "/app/frontend/src/components/AgeVerification.js"
+    }
+  },
+  "motion": {
+    "library": "framer-motion",
+    "guidelines": {
+      "entrance": "Stagger children by 0.1s. Fade up + scale (0.95 -> 1).",
+      "hover": "Scale 1.02 for cards. Brightness 1.1 for buttons.",
+      "transition": "type: 'spring', stiffness: 300, damping: 30"
+    }
+  },
+  "accessibility": {
+    "contrast": "Ensure text is #EDEDED on dark backgrounds. Muted text #A1A1AA must pass AA.",
+    "focus": "Visible orange ring offset-2 on focus.",
+    "aria": "All interactive elements must have aria-labels if icon-only."
+  },
+  "universal_guidelines": [
+    "Do not use gradients for text.",
+    "Do not use generic 'Inter' font.",
+    "Ensure the 'Add to Cart' button is always accessible (sticky on mobile).",
+    "Use 'sonner' for toast notifications (e.g., 'Added to cart').",
+    "Admin pages must be protected.",
+    "Use data-testid for all interactive elements."
+  ]
+}
