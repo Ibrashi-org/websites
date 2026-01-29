@@ -79,160 +79,116 @@ const Home = () => {
 
   return (
     <main className="min-h-screen pt-20" data-testid="home-page">
-      {/* Hero Section - Featured Product */}
-      {featuredProduct && (
-        <section className="relative min-h-[90vh] flex items-center overflow-hidden" data-testid="hero-section">
-          {/* Background Text */}
-          <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
-            <motion.span
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="hero-text-bg"
+      {/* Hero Section - Marketing Banner */}
+      <section className="relative min-h-[80vh] flex items-center overflow-hidden" data-testid="hero-section">
+        {/* Background Text */}
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
+          <motion.span
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="hero-text-bg"
+          >
+            PREMIUM VAPES
+          </motion.span>
+        </div>
+
+        <div className="container-main relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Marketing Image */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative flex justify-center order-1 lg:order-2"
             >
-              {featuredProduct.name.toUpperCase()}
-            </motion.span>
-          </div>
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#FF4500] rounded-full blur-[100px] opacity-20" />
+                <motion.img
+                  src="https://customer-assets.emergentagent.com/job_mooki-single-vape/artifacts/534ct6rv_shisha.jpg"
+                  alt="Premium Vapes"
+                  className="relative z-10 w-full max-w-md product-glow animate-float"
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.8 }}
+                  data-testid="hero-image"
+                />
+              </div>
+            </motion.div>
 
-          <div className="container-main relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Product Image */}
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="relative flex justify-center order-1 lg:order-2"
+            {/* Marketing Text */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="order-2 lg:order-1 text-center lg:text-left"
+            >
+              <Badge 
+                className="mb-4 bg-[#FF4500]/20 text-[#FF4500] border-0 px-4 py-1"
               >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-[#FF4500] rounded-full blur-[100px] opacity-20" />
-                  <motion.img
-                    src={featuredProduct.image_url}
-                    alt={featuredProduct.name}
-                    className="relative z-10 w-full max-w-md product-glow animate-float"
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                    data-testid="featured-product-image"
-                  />
-                </div>
-              </motion.div>
+                MOOKI STORE
+              </Badge>
+              
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 uppercase tracking-wide">
+                PREMIUM<br />
+                <span className="text-[#FF4500]">VAPES</span>
+              </h1>
+              
+              <p className="text-[#A1A1AA] text-lg mb-8 max-w-lg mx-auto lg:mx-0">
+                Discover our collection of high-quality vape products. Premium flavors, exceptional quality, delivered to your door.
+              </p>
 
-              {/* Product Info */}
+              {/* Feature Highlights */}
+              <div className="grid grid-cols-3 gap-4 mb-8">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="card-surface p-4 text-center"
+                >
+                  <Star className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
+                  <p className="text-xs text-[#A1A1AA] mb-1">Quality</p>
+                  <p className="font-semibold text-sm">Premium</p>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="card-surface p-4 text-center"
+                >
+                  <Truck className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
+                  <p className="text-xs text-[#A1A1AA] mb-1">Shipping</p>
+                  <p className="font-semibold text-sm">Fast Delivery</p>
+                </motion.div>
+                
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="card-surface p-4 text-center"
+                >
+                  <Globe className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
+                  <p className="text-xs text-[#A1A1AA] mb-1">Coverage</p>
+                  <p className="font-semibold text-sm">All Europe</p>
+                </motion.div>
+              </div>
+
+              {/* CTA Button - Scroll to Products */}
               <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="order-2 lg:order-1 text-center lg:text-left"
+                whileHover={{ scale: 1.02 }}
+                className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
               >
-                <Badge 
-                  className="mb-4 bg-[#FF4500]/20 text-[#FF4500] border-0 px-4 py-1"
-                  data-testid="product-badge"
+                <Button
+                  onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="btn-primary px-8 py-6 rounded-full font-semibold text-lg flex items-center gap-2"
+                  data-testid="shop-now-btn"
                 >
-                  Premium Vape
-                </Badge>
-                
-                <h1 
-                  className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 uppercase tracking-wide"
-                  data-testid="featured-product-name"
-                >
-                  {featuredProduct.name}
-                </h1>
-                
-                <p 
-                  className="text-[#A1A1AA] text-lg mb-8 max-w-lg mx-auto lg:mx-0"
-                  data-testid="featured-product-description"
-                >
-                  {featuredProduct.description}
+                  <ShoppingCart className="w-5 h-5" />
+                  Shop Now
+                </Button>
+                <p className="text-[#A1A1AA] text-sm">
+                  {products.length} Products Available
                 </p>
-
-                {/* Features Grid */}
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="card-surface p-4 text-center"
-                  >
-                    <Droplets className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
-                    <p className="text-xs text-[#A1A1AA] mb-1">Flavor</p>
-                    <p className="font-semibold text-sm">{featuredProduct.flavor}</p>
-                  </motion.div>
-                  
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="card-surface p-4 text-center"
-                  >
-                    <Zap className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
-                    <p className="text-xs text-[#A1A1AA] mb-1">Nicotine</p>
-                    <p className="font-semibold text-sm">{featuredProduct.nicotine_strength}</p>
-                  </motion.div>
-                  
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="card-surface p-4 text-center"
-                  >
-                    <Package className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
-                    <p className="text-xs text-[#A1A1AA] mb-1">Stock</p>
-                    <p className={`font-semibold text-sm ${isOutOfStock(featuredProduct) ? 'text-[#EF4444]' : 'text-[#10B981]'}`}>
-                      {isOutOfStock(featuredProduct) ? 'Out of Stock' : `${featuredProduct.stock} Available`}
-                    </p>
-                  </motion.div>
-                </div>
-
-                {/* Price & Add to Cart */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
-                  <div className="text-center sm:text-left">
-                    <p className="text-sm text-[#A1A1AA]">Price</p>
-                    <p className="text-4xl font-bold text-[#FF4500]" data-testid="featured-product-price">
-                      ${featuredProduct.price.toFixed(2)}
-                    </p>
-                  </div>
-
-                  {!isOutOfStock(featuredProduct) && (
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2 bg-[#121212] rounded-full p-1">
-                        <button
-                          onClick={() => updateQuantity(featuredProduct.id, -1, featuredProduct.stock)}
-                          className="w-10 h-10 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors"
-                          data-testid="featured-quantity-decrease"
-                        >
-                          -
-                        </button>
-                        <span className="w-10 text-center font-semibold" data-testid="featured-quantity-display">
-                          {quantities[featuredProduct.id] || 1}
-                        </span>
-                        <button
-                          onClick={() => updateQuantity(featuredProduct.id, 1, featuredProduct.stock)}
-                          className="w-10 h-10 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors"
-                          data-testid="featured-quantity-increase"
-                        >
-                          +
-                        </button>
-                      </div>
-                      
-                      <Button
-                        onClick={() => handleAddToCart(featuredProduct)}
-                        className="btn-primary px-8 py-6 rounded-full font-semibold text-lg flex items-center gap-2"
-                        data-testid="featured-add-to-cart-btn"
-                      >
-                        <ShoppingCart className="w-5 h-5" />
-                        Add to Cart
-                      </Button>
-                    </div>
-                  )}
-
-                  {isOutOfStock(featuredProduct) && (
-                    <Badge 
-                      variant="destructive" 
-                      className="px-6 py-3 text-base"
-                    >
-                      Out of Stock
-                    </Badge>
-                  )}
-                </div>
               </motion.div>
-            </div>
+            </motion.div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Store Info Banner */}
       <section className="py-12 bg-gradient-to-r from-[#FF4500]/10 via-[#0A0A0A] to-[#FF4500]/10 border-y border-[#262626]" data-testid="store-info-section">
