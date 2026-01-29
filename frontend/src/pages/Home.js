@@ -205,6 +205,86 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Store Info Banner */}
+      <section className="py-12 bg-gradient-to-r from-[#FF4500]/10 via-[#0A0A0A] to-[#FF4500]/10 border-y border-[#262626]" data-testid="store-info-section">
+        <div className="container-main">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-2 text-[#FF4500]">PUNCH</h2>
+            <div className="flex items-center justify-center gap-2 text-[#10B981]">
+              <Star className="w-5 h-5 fill-current" />
+              <p className="text-lg font-medium">Produkte me cilësi të lartë</p>
+              <Star className="w-5 h-5 fill-current" />
+            </div>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="card-surface p-5 text-center"
+            >
+              <div className="w-12 h-12 bg-[#10B981]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <ShoppingCart className="w-6 h-6 text-[#10B981]" />
+              </div>
+              <p className="font-semibold text-[#10B981]">🟢 Online Shopping</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="card-surface p-5 text-center"
+            >
+              <div className="w-12 h-12 bg-[#FF4500]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Truck className="w-6 h-6 text-[#FF4500]" />
+              </div>
+              <p className="font-semibold mb-2">🟢 Posta</p>
+              <div className="text-sm text-[#A1A1AA] space-y-1">
+                <p>🇽🇰 Kosovë: <span className="text-white font-semibold">2€</span></p>
+                <p>🇲🇰 Maqedoni: <span className="text-white font-semibold">5€</span></p>
+                <p>🇦🇱 Shqipëri: <span className="text-white font-semibold">5€</span></p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="card-surface p-5 text-center"
+            >
+              <div className="w-12 h-12 bg-[#3B82F6]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Globe className="w-6 h-6 text-[#3B82F6]" />
+              </div>
+              <p className="font-semibold text-[#3B82F6]">🟢 Transport gjithë Europën</p>
+              <p className="text-sm text-[#A1A1AA] mt-1">🚚📦</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="card-surface p-5 text-center"
+            >
+              <div className="w-12 h-12 bg-[#EAB308]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Check className="w-6 h-6 text-[#EAB308]" />
+              </div>
+              <p className="font-semibold text-[#EAB308]">🔛 Cilësi e Garantuar</p>
+              <p className="text-sm text-[#A1A1AA] mt-1">Premium Quality</p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Product Details Section */}
       <section className="py-20 bg-[#0A0A0A]" data-testid="details-section">
         <div className="container-main">
