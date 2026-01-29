@@ -166,13 +166,13 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
 @app.on_event("startup")
 async def startup_event():
     # Initialize default product if not exists
-    existing_product = await db.product.find_one({}, {"_id": 0})
+    existing_product = await db.products.find_one({}, {"_id": 0})
     if not existing_product:
         product = Product()
         doc = product.model_dump()
         doc['created_at'] = doc['created_at'].isoformat()
         doc['updated_at'] = doc['updated_at'].isoformat()
-        await db.product.insert_one(doc)
+        await db.products.insert_one(doc)
         logger.info("Default product created")
     
     # Initialize default admin if not exists
