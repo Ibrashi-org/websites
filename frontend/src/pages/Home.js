@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShoppingCart, Package, Droplets, Zap, Check, AlertCircle, Truck, Globe, Star } from "lucide-react";
 import { useCart, API } from "@/App";
@@ -8,6 +9,7 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const Home = () => {
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
