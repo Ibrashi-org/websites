@@ -302,26 +302,38 @@ const Home = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
-                  className="card-surface p-5 flex flex-col"
+                  className="card-surface p-5 flex flex-col cursor-pointer group"
                   data-testid={`product-card-${product.id}`}
                 >
-                  {/* Product Image */}
-                  <div className="relative mb-4 bg-[#121212] rounded-xl p-6 flex items-center justify-center h-64">
+                  {/* Product Image - Clickable */}
+                  <div 
+                    className="relative mb-4 bg-[#121212] rounded-xl p-6 flex items-center justify-center h-64 group-hover:bg-[#1a1a1a] transition-colors"
+                    onClick={() => navigate(`/product/${product.id}`)}
+                  >
                     <img
                       src={product.image_url || "https://via.placeholder.com/300"}
                       alt={product.name}
-                      className="max-h-full max-w-full object-contain drop-shadow-lg"
+                      className="max-h-full max-w-full object-contain drop-shadow-lg group-hover:scale-105 transition-transform"
                     />
                     {isOutOfStock(product) && (
                       <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center">
                         <Badge variant="destructive">Out of Stock</Badge>
                       </div>
                     )}
+                    {/* View Details Overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                      <span className="bg-[#FF4500] text-white px-4 py-2 rounded-full text-sm font-semibold">
+                        View Details
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Product Info */}
-                  <div className="flex-grow">
-                    <h3 className="text-lg font-bold mb-1">{product.name}</h3>
+                  {/* Product Info - Clickable */}
+                  <div 
+                    className="flex-grow cursor-pointer"
+                    onClick={() => navigate(`/product/${product.id}`)}
+                  >
+                    <h3 className="text-lg font-bold mb-1 group-hover:text-[#FF4500] transition-colors">{product.name}</h3>
                     <p className="text-sm text-[#A1A1AA] mb-2">{product.flavor}</p>
                     <div className="flex items-center justify-between mb-4">
                       <p className="text-2xl font-bold text-[#FF4500]">${product.price.toFixed(2)}</p>
