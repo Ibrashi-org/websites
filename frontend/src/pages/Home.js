@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Package, Droplets, Zap, Check, AlertCircle } from "lucide-react";
+import { ShoppingCart, Package, Droplets, Zap, Check, AlertCircle, Truck, Globe, Star } from "lucide-react";
 import { useCart } from "@/App";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
