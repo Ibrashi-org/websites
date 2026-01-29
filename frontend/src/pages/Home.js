@@ -1,26 +1,58 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, Package, Droplets, Zap, Check, AlertCircle, Truck, Globe, Star } from "lucide-react";
-import { useCart } from "@/App";
+import { useCart, API } from "@/App";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import axios from "axios";
+import { toast } from "sonner";
 
 const Home = () => {
-  const { product, addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
+  const [products, setProducts] = useState([]);
+  const [quantities, setQuantities] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [featuredProduct, setFeaturedProduct] = useState(null);
 
   useEffect(() => {
-    if (product) {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${API}/products`);
+      const availableProducts = response.data.filter(p => p.is_available);
+      setProducts(availableProducts);
+      if (availableProducts.length > 0) {
+        setFeaturedProduct(availableProducts[0]);
+        // Initialize quantities for all products
+        const initialQuantities = {};
+        availableProducts.forEach(p => {
+          initialQuantities[p.id] = 1;
+        });
+        setQuantities(initialQuantities);
+      }
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    } finally {
       setIsLoading(false);
     }
-  }, [product]);
+  };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (product) => {
+    const qty = quantities[product.id] || 1;
     if (product && product.is_available && product.stock > 0) {
-      addToCart(product, quantity);
-      setQuantity(1);
+      addToCart(product, qty);
+      setQuantities(prev => ({ ...prev, [product.id]: 1 }));
     }
+  };
+
+  const updateQuantity = (productId, delta, maxStock) => {
+    setQuantities(prev => {
+      const current = prev[productId] || 1;
+      const newQty = Math.max(1, Math.min(maxStock, current + delta));
+      return { ...prev, [productId]: newQty };
+    });
   };
 
   if (isLoading) {
@@ -31,179 +63,176 @@ const Home = () => {
     );
   }
 
-  if (!product) {
+  if (products.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center" data-testid="product-not-found">
+      <div className="min-h-screen flex items-center justify-center pt-20" data-testid="no-products">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-[#EF4444] mx-auto mb-4" />
-          <h2 className="text-2xl font-bold">Product not found</h2>
+          <Package className="w-16 h-16 text-[#A1A1AA] mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-2">No Products Available</h2>
+          <p className="text-[#A1A1AA]">Check back soon for new products!</p>
         </div>
       </div>
     );
   }
 
-  const isOutOfStock = product.stock <= 0;
-  const isUnavailable = !product.is_available;
+  const isOutOfStock = (product) => product.stock <= 0;
 
   return (
     <main className="min-h-screen pt-20" data-testid="home-page">
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden" data-testid="hero-section">
-        {/* Background Text */}
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
-          <motion.span
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="hero-text-bg"
-          >
-            STRAWBERRY PUNCH
-          </motion.span>
-        </div>
-
-        <div className="container-main relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Product Image */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="relative flex justify-center order-1 lg:order-2"
+      {/* Hero Section - Featured Product */}
+      {featuredProduct && (
+        <section className="relative min-h-[90vh] flex items-center overflow-hidden" data-testid="hero-section">
+          {/* Background Text */}
+          <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
+            <motion.span
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="hero-text-bg"
             >
-              <div className="relative">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-[#FF4500] rounded-full blur-[100px] opacity-20" />
-                <motion.img
-                  src={product.image_url}
-                  alt={product.name}
-                  className="relative z-10 w-full max-w-md product-glow animate-float"
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.8 }}
-                  data-testid="product-image"
-                />
-              </div>
-            </motion.div>
+              {featuredProduct.name.toUpperCase()}
+            </motion.span>
+          </div>
 
-            {/* Product Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="order-2 lg:order-1 text-center lg:text-left"
-            >
-              <Badge 
-                className="mb-4 bg-[#FF4500]/20 text-[#FF4500] border-0 px-4 py-1"
-                data-testid="product-badge"
+          <div className="container-main relative z-10">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Product Image */}
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="relative flex justify-center order-1 lg:order-2"
               >
-                Premium Vape
-              </Badge>
-              
-              <h1 
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 uppercase tracking-wide"
-                data-testid="product-name"
-              >
-                {product.name}
-              </h1>
-              
-              <p 
-                className="text-[#A1A1AA] text-lg mb-8 max-w-lg mx-auto lg:mx-0"
-                data-testid="product-description"
-              >
-                {product.description}
-              </p>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-[#FF4500] rounded-full blur-[100px] opacity-20" />
+                  <motion.img
+                    src={featuredProduct.image_url}
+                    alt={featuredProduct.name}
+                    className="relative z-10 w-full max-w-md product-glow animate-float"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.8 }}
+                    data-testid="featured-product-image"
+                  />
+                </div>
+              </motion.div>
 
-              {/* Features Grid */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="card-surface p-4 text-center"
-                  data-testid="feature-flavor"
+              {/* Product Info */}
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="order-2 lg:order-1 text-center lg:text-left"
+              >
+                <Badge 
+                  className="mb-4 bg-[#FF4500]/20 text-[#FF4500] border-0 px-4 py-1"
+                  data-testid="product-badge"
                 >
-                  <Droplets className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
-                  <p className="text-xs text-[#A1A1AA] mb-1">Flavor</p>
-                  <p className="font-semibold text-sm">{product.flavor}</p>
-                </motion.div>
+                  Premium Vape
+                </Badge>
                 
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="card-surface p-4 text-center"
-                  data-testid="feature-nicotine"
+                <h1 
+                  className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4 uppercase tracking-wide"
+                  data-testid="featured-product-name"
                 >
-                  <Zap className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
-                  <p className="text-xs text-[#A1A1AA] mb-1">Nicotine</p>
-                  <p className="font-semibold text-sm">{product.nicotine_strength}</p>
-                </motion.div>
+                  {featuredProduct.name}
+                </h1>
                 
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="card-surface p-4 text-center"
-                  data-testid="feature-stock"
+                <p 
+                  className="text-[#A1A1AA] text-lg mb-8 max-w-lg mx-auto lg:mx-0"
+                  data-testid="featured-product-description"
                 >
-                  <Package className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
-                  <p className="text-xs text-[#A1A1AA] mb-1">Stock</p>
-                  <p className={`font-semibold text-sm ${isOutOfStock ? 'text-[#EF4444]' : 'text-[#10B981]'}`}>
-                    {isOutOfStock ? 'Out of Stock' : `${product.stock} Available`}
-                  </p>
-                </motion.div>
-              </div>
+                  {featuredProduct.description}
+                </p>
 
-              {/* Price & Add to Cart */}
-              <div className="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
-                <div className="text-center sm:text-left">
-                  <p className="text-sm text-[#A1A1AA]">Price</p>
-                  <p className="text-4xl font-bold text-[#FF4500]" data-testid="product-price">
-                    ${product.price.toFixed(2)}
-                  </p>
+                {/* Features Grid */}
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="card-surface p-4 text-center"
+                  >
+                    <Droplets className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
+                    <p className="text-xs text-[#A1A1AA] mb-1">Flavor</p>
+                    <p className="font-semibold text-sm">{featuredProduct.flavor}</p>
+                  </motion.div>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="card-surface p-4 text-center"
+                  >
+                    <Zap className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
+                    <p className="text-xs text-[#A1A1AA] mb-1">Nicotine</p>
+                    <p className="font-semibold text-sm">{featuredProduct.nicotine_strength}</p>
+                  </motion.div>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="card-surface p-4 text-center"
+                  >
+                    <Package className="w-6 h-6 text-[#FF4500] mx-auto mb-2" />
+                    <p className="text-xs text-[#A1A1AA] mb-1">Stock</p>
+                    <p className={`font-semibold text-sm ${isOutOfStock(featuredProduct) ? 'text-[#EF4444]' : 'text-[#10B981]'}`}>
+                      {isOutOfStock(featuredProduct) ? 'Out of Stock' : `${featuredProduct.stock} Available`}
+                    </p>
+                  </motion.div>
                 </div>
 
-                {!isUnavailable && !isOutOfStock && (
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 bg-[#121212] rounded-full p-1">
-                      <button
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="w-10 h-10 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors"
-                        data-testid="quantity-decrease-btn"
-                      >
-                        -
-                      </button>
-                      <span className="w-10 text-center font-semibold" data-testid="quantity-display">
-                        {quantity}
-                      </span>
-                      <button
-                        onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                        className="w-10 h-10 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors"
-                        data-testid="quantity-increase-btn"
-                      >
-                        +
-                      </button>
-                    </div>
-                    
-                    <Button
-                      onClick={handleAddToCart}
-                      className="btn-primary px-8 py-6 rounded-full font-semibold text-lg flex items-center gap-2"
-                      data-testid="add-to-cart-btn"
-                    >
-                      <ShoppingCart className="w-5 h-5" />
-                      Add to Cart
-                    </Button>
+                {/* Price & Add to Cart */}
+                <div className="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
+                  <div className="text-center sm:text-left">
+                    <p className="text-sm text-[#A1A1AA]">Price</p>
+                    <p className="text-4xl font-bold text-[#FF4500]" data-testid="featured-product-price">
+                      ${featuredProduct.price.toFixed(2)}
+                    </p>
                   </div>
-                )}
 
-                {(isUnavailable || isOutOfStock) && (
-                  <Badge 
-                    variant="destructive" 
-                    className="px-6 py-3 text-base"
-                    data-testid="unavailable-badge"
-                  >
-                    {isUnavailable ? 'Currently Unavailable' : 'Out of Stock'}
-                  </Badge>
-                )}
-              </div>
-            </motion.div>
+                  {!isOutOfStock(featuredProduct) && (
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 bg-[#121212] rounded-full p-1">
+                        <button
+                          onClick={() => updateQuantity(featuredProduct.id, -1, featuredProduct.stock)}
+                          className="w-10 h-10 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors"
+                          data-testid="featured-quantity-decrease"
+                        >
+                          -
+                        </button>
+                        <span className="w-10 text-center font-semibold" data-testid="featured-quantity-display">
+                          {quantities[featuredProduct.id] || 1}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(featuredProduct.id, 1, featuredProduct.stock)}
+                          className="w-10 h-10 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors"
+                          data-testid="featured-quantity-increase"
+                        >
+                          +
+                        </button>
+                      </div>
+                      
+                      <Button
+                        onClick={() => handleAddToCart(featuredProduct)}
+                        className="btn-primary px-8 py-6 rounded-full font-semibold text-lg flex items-center gap-2"
+                        data-testid="featured-add-to-cart-btn"
+                      >
+                        <ShoppingCart className="w-5 h-5" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  )}
+
+                  {isOutOfStock(featuredProduct) && (
+                    <Badge 
+                      variant="destructive" 
+                      className="px-6 py-3 text-base"
+                    >
+                      Out of Stock
+                    </Badge>
+                  )}
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Store Info Banner */}
       <section className="py-12 bg-gradient-to-r from-[#FF4500]/10 via-[#0A0A0A] to-[#FF4500]/10 border-y border-[#262626]" data-testid="store-info-section">
@@ -285,8 +314,103 @@ const Home = () => {
         </div>
       </section>
 
+      {/* All Products Section */}
+      {products.length > 1 && (
+        <section className="py-20 bg-[#0A0A0A]" data-testid="all-products-section">
+          <div className="container-main">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">All Products</h2>
+              <p className="text-[#A1A1AA] max-w-2xl mx-auto">
+                Explore our complete collection of premium vape products
+              </p>
+            </motion.div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="card-surface p-5 flex flex-col"
+                  data-testid={`product-card-${product.id}`}
+                >
+                  {/* Product Image */}
+                  <div className="relative mb-4 bg-[#121212] rounded-xl p-4 flex items-center justify-center h-48">
+                    <img
+                      src={product.image_url || "https://via.placeholder.com/200"}
+                      alt={product.name}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                    {isOutOfStock(product) && (
+                      <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center">
+                        <Badge variant="destructive">Out of Stock</Badge>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="flex-grow">
+                    <h3 className="text-lg font-bold mb-1">{product.name}</h3>
+                    <p className="text-sm text-[#A1A1AA] mb-2">{product.flavor}</p>
+                    <div className="flex items-center justify-between mb-4">
+                      <p className="text-2xl font-bold text-[#FF4500]">${product.price.toFixed(2)}</p>
+                      <p className="text-xs text-[#A1A1AA]">
+                        {product.nicotine_strength} • {product.stock} in stock
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Add to Cart */}
+                  {!isOutOfStock(product) ? (
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 bg-[#121212] rounded-full p-1">
+                        <button
+                          onClick={() => updateQuantity(product.id, -1, product.stock)}
+                          className="w-8 h-8 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors text-sm"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center font-semibold text-sm">
+                          {quantities[product.id] || 1}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(product.id, 1, product.stock)}
+                          className="w-8 h-8 rounded-full bg-[#0A0A0A] hover:bg-[#262626] flex items-center justify-center transition-colors text-sm"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <Button
+                        onClick={() => handleAddToCart(product)}
+                        className="flex-1 btn-primary rounded-full font-semibold flex items-center justify-center gap-2"
+                        data-testid={`add-to-cart-${product.id}`}
+                      >
+                        <ShoppingCart className="w-4 h-4" />
+                        Add
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button disabled className="w-full rounded-full" variant="secondary">
+                      Out of Stock
+                    </Button>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Product Details Section */}
-      <section className="py-20 bg-[#0A0A0A]" data-testid="details-section">
+      <section className="py-20 bg-[#050505]" data-testid="details-section">
         <div className="container-main">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -294,16 +418,16 @@ const Home = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Product Details</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Why Choose Us</h2>
             <p className="text-[#A1A1AA] max-w-2xl mx-auto">
-              Experience the refreshing taste of our premium Strawberry Punch vape
+              Experience the best quality vape products
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: Check, title: "Premium Quality", desc: "Made with high-grade ingredients" },
-              { icon: Droplets, title: "Rich Flavor", desc: "Authentic strawberry punch taste" },
+              { icon: Droplets, title: "Rich Flavor", desc: "Authentic taste experience" },
               { icon: Package, title: "Easy to Use", desc: "Ready to use out of the box" },
               { icon: Zap, title: "Long Lasting", desc: "Extended battery life" },
             ].map((feature, index) => (
