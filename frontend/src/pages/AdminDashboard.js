@@ -411,192 +411,86 @@ const AdminDashboard = () => {
               data-testid="product-management"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold">Product Management</h2>
+                <h2 className="text-xl font-bold">Product Management ({products.length})</h2>
                 <div className="flex gap-2">
-                  {editingProduct ? (
-                    <>
-                      <Button
-                        variant="ghost"
-                        onClick={() => {
-                          setEditingProduct(false);
-                          setProductForm(product);
-                        }}
-                        data-testid="cancel-edit-btn"
-                      >
-                        <X className="w-4 h-4 mr-2" />
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleProductUpdate}
-                        disabled={savingProduct}
-                        className="btn-primary rounded-full"
-                        data-testid="save-product-btn"
-                      >
-                        {savingProduct ? (
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        ) : (
-                          <Save className="w-4 h-4 mr-2" />
-                        )}
-                        Save Changes
-                      </Button>
-                    </>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      onClick={() => setEditingProduct(true)}
-                      className="border-[#262626]"
-                      data-testid="edit-product-btn"
+                  <Button
+                    variant="ghost"
+                    onClick={fetchProducts}
+                    className="text-[#A1A1AA]"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Refresh
+                  </Button>
+                  <Button
+                    onClick={() => setShowAddProduct(true)}
+                    className="btn-primary rounded-full"
+                    data-testid="add-product-btn"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Product
+                  </Button>
+                </div>
+              </div>
+
+              {products.length === 0 ? (
+                <div className="text-center py-12 text-[#A1A1AA]">
+                  <Package className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>No products yet. Add your first product!</p>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="bg-[#0A0A0A] rounded-xl p-4 border border-[#262626] hover:border-[#FF4500]/50 transition-colors"
+                      data-testid={`product-card-${product.id}`}
                     >
-                      <Edit2 className="w-4 h-4 mr-2" />
-                      Edit Product
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid lg:grid-cols-2 gap-8">
-                {/* Product Image */}
-                <div className="flex flex-col items-center">
-                  <img
-                    src={productForm.image_url}
-                    alt={productForm.name}
-                    className="w-full max-w-sm rounded-xl mb-4"
-                    data-testid="product-image-preview"
-                  />
-                  {editingProduct && (
-                    <div className="w-full max-w-sm">
-                      <Label className="text-[#A1A1AA] mb-2 block">Image URL</Label>
-                      <Input
-                        value={productForm.image_url || ""}
-                        onChange={(e) =>
-                          setProductForm((prev) => ({ ...prev, image_url: e.target.value }))
-                        }
-                        className="bg-[#0A0A0A] border-[#262626]"
-                        data-testid="input-image-url"
+                      <img
+                        src={product.image_url || "https://via.placeholder.com/200"}
+                        alt={product.name}
+                        className="w-full h-48 object-contain rounded-lg mb-4 bg-[#121212]"
                       />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold truncate">{product.name}</h3>
+                          <Badge className={product.is_available ? "badge-completed" : "badge-cancelled"}>
+                            {product.is_available ? "Active" : "Hidden"}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-[#A1A1AA]">{product.flavor}</p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xl font-bold text-[#FF4500]">${product.price?.toFixed(2)}</p>
+                          <p className="text-sm text-[#A1A1AA]">Stock: {product.stock}</p>
+                        </div>
+                        <div className="flex gap-2 pt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1 border-[#262626]"
+                            onClick={() => {
+                              setEditingProduct(product.id);
+                              setProductForm(product);
+                            }}
+                            data-testid={`edit-product-${product.id}`}
+                          >
+                            <Edit2 className="w-4 h-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-[#EF4444]/50 text-[#EF4444] hover:bg-[#EF4444]/10"
+                            onClick={() => handleDeleteProduct(product.id)}
+                            data-testid={`delete-product-${product.id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                  )}
+                  ))}
                 </div>
-
-                {/* Product Details */}
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-[#A1A1AA] mb-2 block">Product Name</Label>
-                    {editingProduct ? (
-                      <Input
-                        value={productForm.name || ""}
-                        onChange={(e) =>
-                          setProductForm((prev) => ({ ...prev, name: e.target.value }))
-                        }
-                        className="bg-[#0A0A0A] border-[#262626]"
-                        data-testid="input-product-name"
-                      />
-                    ) : (
-                      <p className="text-lg font-semibold">{product?.name}</p>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-[#A1A1AA] mb-2 block">Price ($)</Label>
-                      {editingProduct ? (
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={productForm.price || ""}
-                          onChange={(e) =>
-                            setProductForm((prev) => ({
-                              ...prev,
-                              price: parseFloat(e.target.value),
-                            }))
-                          }
-                          className="bg-[#0A0A0A] border-[#262626]"
-                          data-testid="input-price"
-                        />
-                      ) : (
-                        <p className="text-2xl font-bold text-[#FF4500]">
-                          ${product?.price?.toFixed(2)}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label className="text-[#A1A1AA] mb-2 block">Stock</Label>
-                      {editingProduct ? (
-                        <Input
-                          type="number"
-                          value={productForm.stock || ""}
-                          onChange={(e) =>
-                            setProductForm((prev) => ({
-                              ...prev,
-                              stock: parseInt(e.target.value),
-                            }))
-                          }
-                          className="bg-[#0A0A0A] border-[#262626]"
-                          data-testid="input-stock"
-                        />
-                      ) : (
-                        <p className="text-2xl font-bold">{product?.stock}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-[#A1A1AA] mb-2 block">Flavor</Label>
-                      {editingProduct ? (
-                        <Input
-                          value={productForm.flavor || ""}
-                          onChange={(e) =>
-                            setProductForm((prev) => ({ ...prev, flavor: e.target.value }))
-                          }
-                          className="bg-[#0A0A0A] border-[#262626]"
-                          data-testid="input-flavor"
-                        />
-                      ) : (
-                        <p className="font-medium">{product?.flavor}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <Label className="text-[#A1A1AA] mb-2 block">Nicotine</Label>
-                      {editingProduct ? (
-                        <Input
-                          value={productForm.nicotine_strength || ""}
-                          onChange={(e) =>
-                            setProductForm((prev) => ({
-                              ...prev,
-                              nicotine_strength: e.target.value,
-                            }))
-                          }
-                          className="bg-[#0A0A0A] border-[#262626]"
-                          data-testid="input-nicotine"
-                        />
-                      ) : (
-                        <p className="font-medium">{product?.nicotine_strength}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 bg-[#0A0A0A] rounded-xl">
-                    <div>
-                      <Label className="text-[#A1A1AA]">Product Availability</Label>
-                      <p className="text-sm text-[#A1A1AA]">
-                        {productForm.is_available ? "Visible to customers" : "Hidden from store"}
-                      </p>
-                    </div>
-                    <Switch
-                      checked={productForm.is_available}
-                      onCheckedChange={(checked) =>
-                        setProductForm((prev) => ({ ...prev, is_available: checked }))
-                      }
-                      disabled={!editingProduct}
-                      className="data-[state=checked]:bg-[#FF4500]"
-                      data-testid="toggle-availability"
-                    />
-                  </div>
-                </div>
-              </div>
+              )}
             </motion.div>
           </TabsContent>
 
