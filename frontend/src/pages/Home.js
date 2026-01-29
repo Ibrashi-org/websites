@@ -271,21 +271,26 @@ const Home = () => {
       </section>
 
       {/* All Products Section */}
-      {products.length > 1 && (
-        <section className="py-20 bg-[#0A0A0A]" data-testid="all-products-section">
-          <div className="container-main">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">All Products</h2>
-              <p className="text-[#A1A1AA] max-w-2xl mx-auto">
-                Explore our complete collection of premium vape products
-              </p>
-            </motion.div>
+      <section id="products-section" className="py-20 bg-[#0A0A0A]" data-testid="all-products-section">
+        <div className="container-main">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Products</h2>
+            <p className="text-[#A1A1AA] max-w-2xl mx-auto">
+              Explore our complete collection of premium vape products
+            </p>
+          </motion.div>
 
+          {products.length === 0 ? (
+            <div className="text-center py-12 text-[#A1A1AA]">
+              <Package className="w-16 h-16 mx-auto mb-4 opacity-50" />
+              <p>No products available yet. Check back soon!</p>
+            </div>
+          ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product, index) => (
                 <motion.div
@@ -361,9 +366,9 @@ const Home = () => {
                 </motion.div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          )}
+        </div>
+      </section>
 
       {/* Product Details Section */}
       <section className="py-20 bg-[#050505]" data-testid="details-section">
