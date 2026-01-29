@@ -13,6 +13,7 @@ import OrderConfirmation from "@/pages/OrderConfirmation";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Contact from "@/pages/Contact";
+import ProductDetail from "@/pages/ProductDetail";
 
 // Components
 import AgeVerification from "@/components/AgeVerification";
