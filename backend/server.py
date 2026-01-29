@@ -269,14 +269,13 @@ async def delete_product(product_id: str, admin: str = Depends(verify_token)):
 
 @api_router.post("/orders", response_model=Order)
 async def create_order(order_data: OrderCreate):
-    # Check product availability and stock
-    product = await db.product.find_one({}, {"_id": 0})
-    if not product or not product.get('is_available'):
-        raise HTTPException(status_code=400, detail="Product not available")
-    
-    total_quantity = sum(item.quantity for item in order_data.items)
-    if product.get('stock', 0) < total_quantity:
-        raise HTTPException(status_code=400, detail="Insufficient stock")
+    # Check product availability and stock for each item
+    for item in order_data.items:
+        product = await db.products.find_one({"id": item.product_id}, {"_id": 0})
+        if not product or not product.get('is_available'):
+            raise HTTPException(status_code=400, detail=f"Product {item.product_name} not available")
+        if product.get('stock', 0) < item.quantity:
+            raise HTTPException(status_code=400, detail=f"Insufficient stock for {item.product_name}")
     
     order = Order(**order_data.model_dump())
     doc = order.model_dump()
@@ -285,9 +284,12 @@ async def create_order(order_data: OrderCreate):
     
     await db.orders.insert_one(doc)
     
-    # Update stock
-    new_stock = product['stock'] - total_quantity
-    await db.product.update_one({}, {"$set": {"stock": new_stock}})
+    # Update stock for each item
+    for item in order_data.items:
+        await db.products.update_one(
+            {"id": item.product_id},
+            {"$inc": {"stock": -item.quantity}}
+        )
     
     # Send confirmation email if email provided
     if order_data.email:
