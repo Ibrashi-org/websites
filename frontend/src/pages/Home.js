@@ -304,11 +304,11 @@ const Home = () => {
                   data-testid={`product-card-${product.id}`}
                 >
                   {/* Product Image */}
-                  <div className="relative mb-4 bg-[#121212] rounded-xl p-4 flex items-center justify-center h-48">
+                  <div className="relative mb-4 bg-[#121212] rounded-xl p-6 flex items-center justify-center h-64">
                     <img
-                      src={product.image_url || "https://via.placeholder.com/200"}
+                      src={product.image_url || "https://via.placeholder.com/300"}
                       alt={product.name}
-                      className="max-h-full max-w-full object-contain"
+                      className="max-h-full max-w-full object-contain drop-shadow-lg"
                     />
                     {isOutOfStock(product) && (
                       <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center">
