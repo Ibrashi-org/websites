@@ -17,6 +17,8 @@ import {
   Mail,
   Phone,
   MapPin,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
