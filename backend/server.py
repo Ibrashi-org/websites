@@ -197,9 +197,20 @@ async def shutdown_db_client():
 async def root():
     return {"message": "MOOKI STORE API"}
 
+@api_router.get("/products", response_model=List[Product])
+async def get_all_products():
+    products = await db.products.find({}, {"_id": 0}).to_list(100)
+    for product in products:
+        if isinstance(product.get('created_at'), str):
+            product['created_at'] = datetime.fromisoformat(product['created_at'])
+        if isinstance(product.get('updated_at'), str):
+            product['updated_at'] = datetime.fromisoformat(product['updated_at'])
+    return products
+
 @api_router.get("/product", response_model=Product)
 async def get_product():
-    product = await db.product.find_one({}, {"_id": 0})
+    # Get the first/featured product for backward compatibility
+    product = await db.products.find_one({}, {"_id": 0})
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     if isinstance(product.get('created_at'), str):
@@ -208,13 +219,51 @@ async def get_product():
         product['updated_at'] = datetime.fromisoformat(product['updated_at'])
     return product
 
-@api_router.put("/product", response_model=Product)
-async def update_product(update: ProductUpdate, admin: str = Depends(verify_token)):
+@api_router.get("/product/{product_id}", response_model=Product)
+async def get_product_by_id(product_id: str):
+    product = await db.products.find_one({"id": product_id}, {"_id": 0})
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    if isinstance(product.get('created_at'), str):
+        product['created_at'] = datetime.fromisoformat(product['created_at'])
+    if isinstance(product.get('updated_at'), str):
+        product['updated_at'] = datetime.fromisoformat(product['updated_at'])
+    return product
+
+@api_router.post("/product", response_model=Product)
+async def create_product(product_data: ProductBase, admin: str = Depends(verify_token)):
+    product = Product(**product_data.model_dump())
+    doc = product.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    doc['updated_at'] = doc['updated_at'].isoformat()
+    await db.products.insert_one(doc)
+    return product
+
+@api_router.put("/product/{product_id}", response_model=Product)
+async def update_product(product_id: str, update: ProductUpdate, admin: str = Depends(verify_token)):
     update_data = {k: v for k, v in update.model_dump().items() if v is not None}
     update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
     
-    await db.product.update_one({}, {"$set": update_data})
+    result = await db.products.update_one({"id": product_id}, {"$set": update_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return await get_product_by_id(product_id)
+
+@api_router.put("/product", response_model=Product)
+async def update_first_product(update: ProductUpdate, admin: str = Depends(verify_token)):
+    # Update first product for backward compatibility
+    update_data = {k: v for k, v in update.model_dump().items() if v is not None}
+    update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    await db.products.update_one({}, {"$set": update_data})
     return await get_product()
+
+@api_router.delete("/product/{product_id}")
+async def delete_product(product_id: str, admin: str = Depends(verify_token)):
+    result = await db.products.delete_one({"id": product_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return {"message": "Product deleted successfully"}
 
 # ==================== ORDER ENDPOINTS ====================
 
