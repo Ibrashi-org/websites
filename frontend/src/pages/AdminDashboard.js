@@ -56,14 +56,25 @@ const AdminDashboard = () => {
   const { token, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [editingProduct, setEditingProduct] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [productForm, setProductForm] = useState({});
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [savingProduct, setSavingProduct] = useState(false);
+  const [showAddProduct, setShowAddProduct] = useState(false);
+  const [newProductForm, setNewProductForm] = useState({
+    name: "",
+    flavor: "",
+    nicotine_strength: "5%",
+    price: 29.99,
+    stock: 100,
+    is_available: true,
+    image_url: "",
+    description: "",
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -76,7 +87,7 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      await Promise.all([fetchProduct(), fetchOrders(), fetchMessages()]);
+      await Promise.all([fetchProducts(), fetchOrders(), fetchMessages()]);
     } finally {
       setIsLoading(false);
     }
