@@ -93,13 +93,12 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchProduct = async () => {
+  const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${API}/product`);
-      setProduct(response.data);
-      setProductForm(response.data);
+      const response = await axios.get(`${API}/products`);
+      setProducts(response.data);
     } catch (error) {
-      console.error("Failed to fetch product:", error);
+      console.error("Failed to fetch products:", error);
     }
   };
 
@@ -125,19 +124,66 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleProductUpdate = async () => {
+  const handleProductUpdate = async (productId) => {
     setSavingProduct(true);
     try {
-      const response = await axios.put(`${API}/product`, productForm, {
+      const response = await axios.put(`${API}/product/${productId}`, productForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setProduct(response.data);
-      setEditingProduct(false);
+      setProducts((prev) =>
+        prev.map((p) => (p.id === productId ? response.data : p))
+      );
+      setEditingProduct(null);
       toast.success("Product updated successfully");
     } catch (error) {
       toast.error("Failed to update product");
     } finally {
       setSavingProduct(false);
+    }
+  };
+
+  const handleAddProduct = async () => {
+    if (!newProductForm.name || !newProductForm.price) {
+      toast.error("Please fill in product name and price");
+      return;
+    }
+    setSavingProduct(true);
+    try {
+      const response = await axios.post(`${API}/product`, newProductForm, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProducts((prev) => [...prev, response.data]);
+      setShowAddProduct(false);
+      setNewProductForm({
+        name: "",
+        flavor: "",
+        nicotine_strength: "5%",
+        price: 29.99,
+        stock: 100,
+        is_available: true,
+        image_url: "",
+        description: "",
+      });
+      toast.success("Product added successfully");
+    } catch (error) {
+      toast.error("Failed to add product");
+    } finally {
+      setSavingProduct(false);
+    }
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) {
+      return;
+    }
+    try {
+      await axios.delete(`${API}/product/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete product");
     }
   };
 
