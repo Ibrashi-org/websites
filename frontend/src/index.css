@@ -258,3 +258,12 @@ input::placeholder, textarea::placeholder {
     padding: 0 32px;
   }
 }
+
+/* Hide external badges */
+div[style*="position: fixed"][style*="right"][style*="bottom"],
+div[class*="watermark"],
+div[class*="badge"]:not(.badge-pending):not(.badge-confirmed):not(.badge-completed):not(.badge-cancelled) a[href*="emergent"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
