@@ -59,3 +59,13 @@ button:disabled {
 [data-radix-popper-content-wrapper] {
   z-index: 100 !important;
 }
+
+/* Hide Emergent badge */
+[data-testid="emergent-badge"],
+.emergent-badge,
+div[class*="emergent"],
+a[href*="emergentagent"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
