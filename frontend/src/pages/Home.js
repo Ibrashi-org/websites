@@ -107,9 +107,9 @@ const Home = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-[#FF4500] rounded-full blur-[100px] opacity-20" />
                 <motion.img
-                  src="https://customer-assets.emergentagent.com/job_mooki-single-vape/artifacts/534ct6rv_shisha.jpg"
-                  alt="Premium Vapes"
-                  className="relative z-10 w-full max-w-md product-glow animate-float"
+                  src="/hero-banner.png"
+                  alt="MOOKI Store Premium Vapes"
+                  className="relative z-10 w-full max-w-lg product-glow animate-float"
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.8 }}
