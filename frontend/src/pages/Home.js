@@ -97,23 +97,87 @@ const Home = () => {
 
         <div className="container-main relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Marketing Image */}
+            {/* Flying Vapes Display */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="relative flex justify-center order-1 lg:order-2"
+              className="relative flex justify-center order-1 lg:order-2 min-h-[500px]"
             >
-              <div className="relative">
-                <div className="absolute inset-0 bg-[#FF4500] rounded-full blur-[100px] opacity-20" />
+              <div className="relative w-full max-w-lg h-[500px]">
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-[#FF4500] rounded-full blur-[120px] opacity-15" />
+                
+                {/* Center Logo */}
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                  <div className="text-center">
+                    <h2 className="text-6xl sm:text-7xl font-bold text-white tracking-wider" style={{ textShadow: '0 0 30px rgba(0,0,0,0.8)' }}>
+                      MOOKI
+                    </h2>
+                    <h3 className="text-4xl sm:text-5xl font-bold text-[#FF4500] -mt-2" style={{ fontFamily: 'cursive', textShadow: '0 0 20px rgba(255,69,0,0.5)' }}>
+                      Store
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Flying Vape 1 - Left */}
                 <motion.img
-                  src="/hero-banner.png"
-                  alt="MOOKI Store Premium Vapes"
-                  className="relative z-10 w-full max-w-lg product-glow animate-float"
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.8 }}
-                  data-testid="hero-image"
+                  src="https://mookistore.shop/static/media/b1.c7352669cb0d9ddb2c35.png"
+                  alt="Vape 1"
+                  className="absolute w-32 sm:w-40 drop-shadow-2xl"
+                  style={{ left: '-5%', top: '15%', transform: 'rotate(-15deg)' }}
+                  initial={{ opacity: 0, x: -50, rotate: -30 }}
+                  animate={{ opacity: 1, x: 0, rotate: -15 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  whileHover={{ scale: 1.1, rotate: -10 }}
+                />
+
+                {/* Flying Vape 2 - Top Left */}
+                <motion.img
+                  src="https://mookistore.shop/static/media/b2.250389f667ec1b573209.png"
+                  alt="Vape 2"
+                  className="absolute w-28 sm:w-36 drop-shadow-2xl"
+                  style={{ left: '15%', top: '0%', transform: 'rotate(10deg)' }}
+                  initial={{ opacity: 0, y: -50, rotate: 20 }}
+                  animate={{ opacity: 1, y: 0, rotate: 10 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  whileHover={{ scale: 1.1, rotate: 15 }}
+                />
+
+                {/* Flying Vape 3 - Right */}
+                <motion.img
+                  src="https://mookistore.shop/static/media/b3.3d81629c43467bc37e9f.png"
+                  alt="Vape 3"
+                  className="absolute w-28 sm:w-36 drop-shadow-2xl"
+                  style={{ right: '0%', top: '20%', transform: 'rotate(20deg)' }}
+                  initial={{ opacity: 0, x: 50, rotate: 30 }}
+                  animate={{ opacity: 1, x: 0, rotate: 20 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  whileHover={{ scale: 1.1, rotate: 25 }}
+                />
+
+                {/* Flying Vape 4 - Bottom Left */}
+                <motion.img
+                  src="https://mookistore.shop/static/media/b5.ce75942ff5e062d46339.png"
+                  alt="Vape 4"
+                  className="absolute w-28 sm:w-36 drop-shadow-2xl"
+                  style={{ left: '5%', bottom: '10%', transform: 'rotate(-10deg)' }}
+                  initial={{ opacity: 0, y: 50, rotate: -20 }}
+                  animate={{ opacity: 1, y: 0, rotate: -10 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                />
+
+                {/* Flying Vape 5 - Bottom Right */}
+                <motion.img
+                  src="https://mookistore.shop/static/media/b6.33f78a788276a6c2d0c6.png"
+                  alt="Vape 5"
+                  className="absolute w-28 sm:w-36 drop-shadow-2xl"
+                  style={{ right: '10%', bottom: '5%', transform: 'rotate(15deg)' }}
+                  initial={{ opacity: 0, y: 50, rotate: 25 }}
+                  animate={{ opacity: 1, y: 0, rotate: 15 }}
+                  transition={{ duration: 0.8, delay: 0.7 }}
+                  whileHover={{ scale: 1.1, rotate: 20 }}
                 />
               </div>
             </motion.div>
