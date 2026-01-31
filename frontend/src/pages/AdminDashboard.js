@@ -116,6 +116,11 @@ const AdminDashboard = () => {
       setOrders(response.data);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
+      if (error.response?.status === 401) {
+        logout();
+        navigate("/admin");
+        toast.error("Session expired. Please login again.");
+      }
     }
   };
 
@@ -127,6 +132,10 @@ const AdminDashboard = () => {
       setMessages(response.data);
     } catch (error) {
       console.error("Failed to fetch messages:", error);
+      if (error.response?.status === 401) {
+        logout();
+        navigate("/admin");
+      }
     }
   };
 
