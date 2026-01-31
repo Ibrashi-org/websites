@@ -219,7 +219,14 @@ const AdminDashboard = () => {
       }
       toast.success(`Order status updated to ${newStatus}`);
     } catch (error) {
-      toast.error("Failed to update order status");
+      console.error("Failed to update order status:", error);
+      if (error.response?.status === 401) {
+        logout();
+        navigate("/admin");
+        toast.error("Session expired. Please login again.");
+      } else {
+        toast.error("Failed to update order status");
+      }
     }
   };
 
