@@ -700,133 +700,155 @@ const AdminDashboard = () => {
         </Tabs>
       </div>
 
-      {/* Order Detail Dialog */}
-      <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-        <DialogContent className="bg-[#0A0A0A] border-[#262626] max-w-lg" data-testid="order-detail-dialog">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              Order #{selectedOrder?.id.slice(0, 8).toUpperCase()}
-              <Badge className={getStatusBadgeClass(selectedOrder?.status)}>
-                {selectedOrder?.status}
-              </Badge>
-            </DialogTitle>
-            <DialogDescription className="sr-only">
-              Order details and status management
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedOrder && (
-            <div className="space-y-6">
-              {/* Customer Info */}
-              <div className="space-y-2">
-                <h4 className="font-semibold text-sm text-[#A1A1AA]">Customer</h4>
-                <div className="p-4 bg-[#121212] rounded-lg space-y-2">
-                  <p className="font-semibold">{selectedOrder.customer_name}</p>
-                  <p className="text-sm text-[#A1A1AA] flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    {selectedOrder.phone}
-                  </p>
-                  {selectedOrder.email && (
-                    <p className="text-sm text-[#A1A1AA] flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
-                      {selectedOrder.email}
-                    </p>
-                  )}
-                  <p className="text-sm text-[#A1A1AA] flex items-start gap-2">
-                    <MapPin className="w-4 h-4 mt-0.5" />
-                    {selectedOrder.address}
-                  </p>
-                </div>
-              </div>
-
-              {/* Order Items */}
-              <div className="space-y-2">
-                <h4 className="font-semibold text-sm text-[#A1A1AA]">Items</h4>
-                {selectedOrder.items.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between p-4 bg-[#121212] rounded-lg"
-                  >
-                    <div>
-                      <p className="font-semibold">{item.product_name}</p>
-                      <p className="text-sm text-[#A1A1AA]">Qty: {item.quantity}</p>
-                    </div>
-                    <p className="font-semibold">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Payment & Total */}
-              <div className="flex justify-between items-center p-4 bg-[#121212] rounded-lg">
-                <div>
-                  <p className="text-sm text-[#A1A1AA]">Payment Method</p>
-                  <p className="font-medium">{selectedOrder.payment_method}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-[#A1A1AA]">Total</p>
-                  <p className="text-2xl font-bold text-[#FF4500]">
-                    ${selectedOrder.total.toFixed(2)}
-                  </p>
-                </div>
-              </div>
-
-              {/* Status Update */}
-              <div className="flex gap-2">
-                {["Pending", "Confirmed", "Completed", "Cancelled"].map((status) => (
-                  <Button
-                    key={status}
-                    variant={selectedOrder.status === status ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleOrderStatusUpdate(selectedOrder.id, status)}
-                    className={
-                      selectedOrder.status === status
-                        ? "bg-[#FF4500]"
-                        : "border-[#262626]"
-                    }
-                    data-testid={`status-btn-${status.toLowerCase()}`}
-                  >
-                    {status}
-                  </Button>
-                ))}
+      {/* Order Detail Modal */}
+      {selectedOrder && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          onClick={() => setSelectedOrder(null)}
+          data-testid="order-detail-modal"
+        >
+          <div className="absolute inset-0 bg-black/80" />
+          <div 
+            className="relative bg-[#0A0A0A] border border-[#262626] rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold">
+                Order #{selectedOrder.id.slice(0, 8).toUpperCase()}
+              </h2>
+              <div className="flex items-center gap-3">
+                <Badge className={getStatusBadgeClass(selectedOrder.status)}>
+                  {selectedOrder.status}
+                </Badge>
+                <button 
+                  onClick={() => setSelectedOrder(null)}
+                  className="text-[#A1A1AA] hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
 
-      {/* Message Detail Dialog */}
-      <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
-        <DialogContent className="bg-[#0A0A0A] border-[#262626] max-w-lg" data-testid="message-detail-dialog">
-          <DialogHeader>
-            <DialogTitle>Message from {selectedMessage?.name}</DialogTitle>
-          </DialogHeader>
-
-          {selectedMessage && (
-            <div className="space-y-4">
-              <div className="space-y-2">
+            {/* Customer Info */}
+            <div className="space-y-2 mb-4">
+              <h4 className="font-semibold text-sm text-[#A1A1AA]">Customer</h4>
+              <div className="p-4 bg-[#121212] rounded-lg space-y-2">
+                <p className="font-semibold">{selectedOrder.customer_name}</p>
                 <p className="text-sm text-[#A1A1AA] flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  {selectedMessage.email}
+                  <Phone className="w-4 h-4" />
+                  {selectedOrder.phone}
                 </p>
-                {selectedMessage.phone && (
+                {selectedOrder.email && (
                   <p className="text-sm text-[#A1A1AA] flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    {selectedMessage.phone}
+                    <Mail className="w-4 h-4" />
+                    {selectedOrder.email}
                   </p>
                 )}
+                <p className="text-sm text-[#A1A1AA] flex items-start gap-2">
+                  <MapPin className="w-4 h-4 mt-0.5" />
+                  {selectedOrder.address}
+                </p>
               </div>
-              <div className="p-4 bg-[#121212] rounded-lg">
-                <p className="whitespace-pre-wrap">{selectedMessage.message}</p>
-              </div>
-              <p className="text-xs text-[#A1A1AA]">
-                Received: {formatDate(selectedMessage.created_at)}
-              </p>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+
+            {/* Order Items */}
+            <div className="space-y-2 mb-4">
+              <h4 className="font-semibold text-sm text-[#A1A1AA]">Items</h4>
+              {selectedOrder.items.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between p-4 bg-[#121212] rounded-lg"
+                >
+                  <div>
+                    <p className="font-semibold">{item.product_name}</p>
+                    <p className="text-sm text-[#A1A1AA]">Qty: {item.quantity}</p>
+                  </div>
+                  <p className="font-semibold">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Payment & Total */}
+            <div className="flex justify-between items-center p-4 bg-[#121212] rounded-lg mb-4">
+              <div>
+                <p className="text-sm text-[#A1A1AA]">Payment Method</p>
+                <p className="font-medium">{selectedOrder.payment_method}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-[#A1A1AA]">Total</p>
+                <p className="text-2xl font-bold text-[#FF4500]">
+                  ${selectedOrder.total.toFixed(2)}
+                </p>
+              </div>
+            </div>
+
+            {/* Status Update Buttons */}
+            <div className="flex flex-wrap gap-2">
+              {["Pending", "Confirmed", "Completed", "Cancelled"].map((status) => (
+                <Button
+                  key={status}
+                  variant={selectedOrder.status === status ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleOrderStatusUpdate(selectedOrder.id, status)}
+                  className={
+                    selectedOrder.status === status
+                      ? "bg-[#FF4500]"
+                      : "border-[#262626]"
+                  }
+                >
+                  {status}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Message Detail Modal */}
+      {selectedMessage && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          onClick={() => setSelectedMessage(null)}
+        >
+          <div className="absolute inset-0 bg-black/80" />
+          <div 
+            className="relative bg-[#0A0A0A] border border-[#262626] rounded-xl max-w-lg w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">Message from {selectedMessage.name}</h2>
+              <button 
+                onClick={() => setSelectedMessage(null)}
+                className="text-[#A1A1AA] hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-2 mb-4">
+              <p className="text-sm text-[#A1A1AA] flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                {selectedMessage.email}
+              </p>
+              {selectedMessage.phone && (
+                <p className="text-sm text-[#A1A1AA] flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  {selectedMessage.phone}
+                </p>
+              )}
+            </div>
+            <div className="p-4 bg-[#121212] rounded-lg mb-4">
+              <p className="whitespace-pre-wrap">{selectedMessage.message}</p>
+            </div>
+            <p className="text-xs text-[#A1A1AA]">
+              Received: {formatDate(selectedMessage.created_at)}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Add Product Dialog */}
       <Dialog open={showAddProduct} onOpenChange={setShowAddProduct}>
