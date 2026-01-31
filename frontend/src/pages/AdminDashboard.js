@@ -88,6 +88,12 @@ const AdminDashboard = () => {
     setIsLoading(true);
     try {
       await Promise.all([fetchProducts(), fetchOrders(), fetchMessages()]);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+      if (error.response?.status === 401) {
+        logout();
+        navigate("/admin");
+      }
     } finally {
       setIsLoading(false);
     }
