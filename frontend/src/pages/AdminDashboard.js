@@ -574,16 +574,18 @@ const AdminDashboard = () => {
                               value={order.status}
                               onValueChange={(value) => handleOrderStatusUpdate(order.id, value)}
                             >
-                              <SelectTrigger className="w-32 bg-transparent border-0" data-testid={`status-select-${order.id}`}>
-                                <Badge className={getStatusBadgeClass(order.status)}>
-                                  {order.status}
-                                </Badge>
+                              <SelectTrigger className="w-36 bg-[#121212] border border-[#262626] rounded-lg px-3 py-2" data-testid={`status-select-${order.id}`}>
+                                <SelectValue>
+                                  <Badge className={getStatusBadgeClass(order.status)}>
+                                    {order.status}
+                                  </Badge>
+                                </SelectValue>
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0A0A0A] border-[#262626]">
-                                <SelectItem value="Pending">Pending</SelectItem>
-                                <SelectItem value="Confirmed">Confirmed</SelectItem>
-                                <SelectItem value="Completed">Completed</SelectItem>
-                                <SelectItem value="Cancelled">Cancelled</SelectItem>
+                              <SelectContent className="bg-[#0A0A0A] border-[#262626] z-50">
+                                <SelectItem value="Pending" className="hover:bg-[#262626]">Pending</SelectItem>
+                                <SelectItem value="Confirmed" className="hover:bg-[#262626]">Confirmed</SelectItem>
+                                <SelectItem value="Completed" className="hover:bg-[#262626]">Completed</SelectItem>
+                                <SelectItem value="Cancelled" className="hover:bg-[#262626]">Cancelled</SelectItem>
                               </SelectContent>
                             </Select>
                           </TableCell>
