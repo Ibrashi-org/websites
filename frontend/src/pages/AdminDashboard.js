@@ -581,7 +581,7 @@ const AdminDashboard = () => {
                                   </Badge>
                                 </SelectValue>
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0A0A0A] border-[#262626] z-50">
+                              <SelectContent className="bg-[#0A0A0A] border-[#262626] z-[9999]" sideOffset={5}>
                                 <SelectItem value="Pending" className="hover:bg-[#262626]">Pending</SelectItem>
                                 <SelectItem value="Confirmed" className="hover:bg-[#262626]">Confirmed</SelectItem>
                                 <SelectItem value="Completed" className="hover:bg-[#262626]">Completed</SelectItem>
