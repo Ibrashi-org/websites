@@ -850,156 +850,168 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Add Product Dialog */}
-      <Dialog open={showAddProduct} onOpenChange={setShowAddProduct}>
-        <DialogContent className="bg-[#0A0A0A] border-[#262626] max-w-lg max-h-[90vh] overflow-y-auto" data-testid="add-product-dialog">
-          <DialogHeader>
-            <DialogTitle>Add New Product</DialogTitle>
-            <DialogDescription className="sr-only">
-              Add a new product to your store
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div>
-              <Label className="text-[#A1A1AA] mb-2 block">Product Name *</Label>
-              <Input
-                value={newProductForm.name}
-                onChange={(e) =>
-                  setNewProductForm((prev) => ({ ...prev, name: e.target.value }))
-                }
-                placeholder="e.g., Strawberry Punch"
-                className="bg-[#121212] border-[#262626]"
-                data-testid="new-product-name"
-              />
-            </div>
-
-            <div>
-              <Label className="text-[#A1A1AA] mb-2 block">Flavor</Label>
-              <Input
-                value={newProductForm.flavor}
-                onChange={(e) =>
-                  setNewProductForm((prev) => ({ ...prev, flavor: e.target.value }))
-                }
-                placeholder="e.g., Strawberry Punch"
-                className="bg-[#121212] border-[#262626]"
-                data-testid="new-product-flavor"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-[#A1A1AA] mb-2 block">Price ($) *</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={newProductForm.price}
-                  onChange={(e) =>
-                    setNewProductForm((prev) => ({
-                      ...prev,
-                      price: parseFloat(e.target.value) || 0,
-                    }))
-                  }
-                  className="bg-[#121212] border-[#262626]"
-                  data-testid="new-product-price"
-                />
-              </div>
-
-              <div>
-                <Label className="text-[#A1A1AA] mb-2 block">Stock</Label>
-                <Input
-                  type="number"
-                  value={newProductForm.stock}
-                  onChange={(e) =>
-                    setNewProductForm((prev) => ({
-                      ...prev,
-                      stock: parseInt(e.target.value) || 0,
-                    }))
-                  }
-                  className="bg-[#121212] border-[#262626]"
-                  data-testid="new-product-stock"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-[#A1A1AA] mb-2 block">Nicotine Strength</Label>
-              <Input
-                value={newProductForm.nicotine_strength}
-                onChange={(e) =>
-                  setNewProductForm((prev) => ({ ...prev, nicotine_strength: e.target.value }))
-                }
-                placeholder="e.g., 5%"
-                className="bg-[#121212] border-[#262626]"
-                data-testid="new-product-nicotine"
-              />
-            </div>
-
-            <div>
-              <Label className="text-[#A1A1AA] mb-2 block">Image URL</Label>
-              <Input
-                value={newProductForm.image_url}
-                onChange={(e) =>
-                  setNewProductForm((prev) => ({ ...prev, image_url: e.target.value }))
-                }
-                placeholder="https://example.com/image.jpg"
-                className="bg-[#121212] border-[#262626]"
-                data-testid="new-product-image"
-              />
-            </div>
-
-            <div>
-              <Label className="text-[#A1A1AA] mb-2 block">Description</Label>
-              <Input
-                value={newProductForm.description}
-                onChange={(e) =>
-                  setNewProductForm((prev) => ({ ...prev, description: e.target.value }))
-                }
-                placeholder="Product description..."
-                className="bg-[#121212] border-[#262626]"
-                data-testid="new-product-description"
-              />
-            </div>
-
-            <div className="flex items-center justify-between p-4 bg-[#121212] rounded-xl">
-              <div>
-                <Label className="text-[#A1A1AA]">Available for Sale</Label>
-              </div>
-              <Switch
-                checked={newProductForm.is_available}
-                onCheckedChange={(checked) =>
-                  setNewProductForm((prev) => ({ ...prev, is_available: checked }))
-                }
-                className="data-[state=checked]:bg-[#FF4500]"
-                data-testid="new-product-available"
-              />
-            </div>
-
-            <div className="flex gap-2 pt-4">
-              <Button
-                variant="outline"
-                className="flex-1 border-[#262626]"
+      {/* Add Product Modal */}
+      {showAddProduct && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          onClick={() => setShowAddProduct(false)}
+        >
+          <div className="absolute inset-0 bg-black/80" />
+          <div 
+            className="relative bg-[#0A0A0A] border border-[#262626] rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold">Add New Product</h2>
+              <button 
                 onClick={() => setShowAddProduct(false)}
+                className="text-[#A1A1AA] hover:text-white"
               >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleAddProduct}
-                disabled={savingProduct}
-                className="flex-1 btn-primary"
-                data-testid="save-new-product-btn"
-              >
-                {savingProduct ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Plus className="w-4 h-4 mr-2" />
-                )}
-                Add Product
-              </Button>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label className="text-[#A1A1AA] mb-2 block">Product Name *</Label>
+                <Input
+                  value={newProductForm.name}
+                  onChange={(e) =>
+                    setNewProductForm((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                  placeholder="e.g., Strawberry Punch"
+                  className="bg-[#121212] border-[#262626]"
+                  data-testid="new-product-name"
+                />
+              </div>
+
+              <div>
+                <Label className="text-[#A1A1AA] mb-2 block">Flavor</Label>
+                <Input
+                  value={newProductForm.flavor}
+                  onChange={(e) =>
+                    setNewProductForm((prev) => ({ ...prev, flavor: e.target.value }))
+                  }
+                  placeholder="e.g., Strawberry Punch"
+                  className="bg-[#121212] border-[#262626]"
+                  data-testid="new-product-flavor"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-[#A1A1AA] mb-2 block">Price ($) *</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={newProductForm.price}
+                    onChange={(e) =>
+                      setNewProductForm((prev) => ({
+                        ...prev,
+                        price: parseFloat(e.target.value) || 0,
+                      }))
+                    }
+                    className="bg-[#121212] border-[#262626]"
+                    data-testid="new-product-price"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-[#A1A1AA] mb-2 block">Stock</Label>
+                  <Input
+                    type="number"
+                    value={newProductForm.stock}
+                    onChange={(e) =>
+                      setNewProductForm((prev) => ({
+                        ...prev,
+                        stock: parseInt(e.target.value) || 0,
+                      }))
+                    }
+                    className="bg-[#121212] border-[#262626]"
+                    data-testid="new-product-stock"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-[#A1A1AA] mb-2 block">Nicotine Strength</Label>
+                <Input
+                  value={newProductForm.nicotine_strength}
+                  onChange={(e) =>
+                    setNewProductForm((prev) => ({ ...prev, nicotine_strength: e.target.value }))
+                  }
+                  placeholder="e.g., 5%"
+                  className="bg-[#121212] border-[#262626]"
+                  data-testid="new-product-nicotine"
+                />
+              </div>
+
+              <div>
+                <Label className="text-[#A1A1AA] mb-2 block">Image URL</Label>
+                <Input
+                  value={newProductForm.image_url}
+                  onChange={(e) =>
+                    setNewProductForm((prev) => ({ ...prev, image_url: e.target.value }))
+                  }
+                  placeholder="https://example.com/image.jpg"
+                  className="bg-[#121212] border-[#262626]"
+                  data-testid="new-product-image"
+                />
+              </div>
+
+              <div>
+                <Label className="text-[#A1A1AA] mb-2 block">Description</Label>
+                <Input
+                  value={newProductForm.description}
+                  onChange={(e) =>
+                    setNewProductForm((prev) => ({ ...prev, description: e.target.value }))
+                  }
+                  placeholder="Product description..."
+                  className="bg-[#121212] border-[#262626]"
+                  data-testid="new-product-description"
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-[#121212] rounded-xl">
+                <div>
+                  <Label className="text-[#A1A1AA]">Available for Sale</Label>
+                </div>
+                <Switch
+                  checked={newProductForm.is_available}
+                  onCheckedChange={(checked) =>
+                    setNewProductForm((prev) => ({ ...prev, is_available: checked }))
+                  }
+                  className="data-[state=checked]:bg-[#FF4500]"
+                  data-testid="new-product-available"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Button
+                  variant="outline"
+                  className="flex-1 border-[#262626]"
+                  onClick={() => setShowAddProduct(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAddProduct}
+                  disabled={savingProduct}
+                  className="flex-1 btn-primary"
+                  data-testid="save-new-product-btn"
+                >
+                  {savingProduct ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Plus className="w-4 h-4 mr-2" />
+                  )}
+                  Add Product
+                </Button>
+              </div>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
 
       {/* Edit Product Dialog */}
       <Dialog open={!!editingProduct} onOpenChange={() => setEditingProduct(null)}>
