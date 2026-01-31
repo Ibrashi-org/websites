@@ -570,24 +570,52 @@ const AdminDashboard = () => {
                             ${order.total.toFixed(2)}
                           </TableCell>
                           <TableCell>
-                            <Select
-                              value={order.status}
-                              onValueChange={(value) => handleOrderStatusUpdate(order.id, value)}
-                            >
-                              <SelectTrigger className="w-36 bg-[#121212] border border-[#262626] rounded-lg px-3 py-2" data-testid={`status-select-${order.id}`}>
-                                <SelectValue>
-                                  <Badge className={getStatusBadgeClass(order.status)}>
-                                    {order.status}
-                                  </Badge>
-                                </SelectValue>
-                              </SelectTrigger>
-                              <SelectContent className="bg-[#0A0A0A] border-[#262626] z-[9999]" sideOffset={5}>
-                                <SelectItem value="Pending" className="hover:bg-[#262626]">Pending</SelectItem>
-                                <SelectItem value="Confirmed" className="hover:bg-[#262626]">Confirmed</SelectItem>
-                                <SelectItem value="Completed" className="hover:bg-[#262626]">Completed</SelectItem>
-                                <SelectItem value="Cancelled" className="hover:bg-[#262626]">Cancelled</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => handleOrderStatusUpdate(order.id, "Pending")}
+                                className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                                  order.status === "Pending" 
+                                    ? "bg-yellow-500/30 text-yellow-400 font-bold" 
+                                    : "bg-[#1a1a1a] text-[#666] hover:bg-yellow-500/20 hover:text-yellow-400"
+                                }`}
+                                data-testid={`status-pending-${order.id}`}
+                              >
+                                Pending
+                              </button>
+                              <button
+                                onClick={() => handleOrderStatusUpdate(order.id, "Confirmed")}
+                                className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                                  order.status === "Confirmed" 
+                                    ? "bg-blue-500/30 text-blue-400 font-bold" 
+                                    : "bg-[#1a1a1a] text-[#666] hover:bg-blue-500/20 hover:text-blue-400"
+                                }`}
+                                data-testid={`status-confirmed-${order.id}`}
+                              >
+                                Confirm
+                              </button>
+                              <button
+                                onClick={() => handleOrderStatusUpdate(order.id, "Completed")}
+                                className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                                  order.status === "Completed" 
+                                    ? "bg-green-500/30 text-green-400 font-bold" 
+                                    : "bg-[#1a1a1a] text-[#666] hover:bg-green-500/20 hover:text-green-400"
+                                }`}
+                                data-testid={`status-completed-${order.id}`}
+                              >
+                                Complete
+                              </button>
+                              <button
+                                onClick={() => handleOrderStatusUpdate(order.id, "Cancelled")}
+                                className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                                  order.status === "Cancelled" 
+                                    ? "bg-red-500/30 text-red-400 font-bold" 
+                                    : "bg-[#1a1a1a] text-[#666] hover:bg-red-500/20 hover:text-red-400"
+                                }`}
+                                data-testid={`status-cancelled-${order.id}`}
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </TableCell>
                           <TableCell className="text-[#A1A1AA] text-sm">
                             {formatDate(order.created_at)}
