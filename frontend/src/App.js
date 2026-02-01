@@ -46,10 +46,6 @@ export const useAuth = () => {
 
 function AppContent() {
   const [cart, setCart] = useState([]);
-  // Initialize age verified state from localStorage synchronously to avoid flash
-  const [isAgeVerified, setIsAgeVerified] = useState(() => {
-    return localStorage.getItem("age_verified") === "true";
-  });
   const [token, setToken] = useState(localStorage.getItem("admin_token") || null);
   const [product, setProduct] = useState(null);
   const location = useLocation();
@@ -76,13 +72,6 @@ function AppContent() {
       setProduct(response.data);
     } catch (error) {
       console.error("Failed to fetch product:", error);
-    }
-  };
-
-  const handleAgeVerify = (verified) => {
-    if (verified) {
-      setIsAgeVerified(true);
-      localStorage.setItem("age_verified", "true");
     }
   };
 
