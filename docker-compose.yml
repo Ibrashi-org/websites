@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8001:8001"
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - DB_NAME=${DB_NAME:-mooki_store}
+      - JWT_SECRET=${JWT_SECRET:-change-this-secret}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL:-http://localhost:8001}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:

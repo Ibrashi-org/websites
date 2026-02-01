@@ -1,0 +1,21 @@
+# Render.com Configuration for Backend
+# This file tells Render how to deploy your FastAPI backend
+
+services:
+  - type: web
+    name: mooki-store-api
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: mooki_store
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0
