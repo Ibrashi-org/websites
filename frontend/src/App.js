@@ -16,7 +16,6 @@ import Contact from "@/pages/Contact";
 import ProductDetail from "@/pages/ProductDetail";
 
 // Components
-import AgeVerification from "@/components/AgeVerification";
 import Header from "@/components/Header";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
